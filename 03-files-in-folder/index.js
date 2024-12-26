@@ -1,23 +1,20 @@
 const fs = require('fs');
 const path = require('path');
-const pathToFolder = path.join(__dirname, 'secret-folder');
+const directory = path.join(__dirname, 'secret-folder');
 
-fs.readdir(pathToFolder, (err, item) => {
+fs.readdir(directory, { withFileTypes: true }, (err, files) => {
   if (err) {
-    console.log(err);
-  }
-  item.forEach((file) => {
-    const pathToFile = path.join(pathToFolder, file);
-    fs.stat(pathToFile, (err, item) => {
-      if (err) {
-        console.log(err);
-      }
-      if (item.isFile()) {
-        const extention = path.extname(file).slice(1);
-        const name = path.parse(file).name;
-        const size = Math.ceil(item.size / 1024);
-        console.log(`${name} - ${extention} - ${size}kb`);
-      }
-    });
+    return console.error('Error ', err.message)}
+  files.forEach((file) => {
+    if (file.isFile()) {
+      const filePath = path.join(directory, file.name);
+      const fileName = file.name.replace('.', " - ")
+      fs.stat(filePath, (err, stats) => {
+        if (err) {
+          return console.error('Error ', err.message)}
+        const fileSize = (stats.size / 1024);
+        console.log(`${fileName} - ${fileSize}kb`);
+      });
+    }
   });
 });
