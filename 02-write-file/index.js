@@ -12,6 +12,7 @@ process.stdin.on('data', (data) => {
 process.on('SIGINT', () => {
   endProcess();
 });
+
 function endProcess() {
   process.stdout.write('Good bye!');
   process.exit();
